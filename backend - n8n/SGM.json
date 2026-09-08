@@ -1,0 +1,602 @@
+{
+  "name": "SGM",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "equipamento-status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -48,
+        16
+      ],
+      "id": "33a9610d-3271-495b-a46c-76e715ba48c7",
+      "name": "Webhook",
+      "webhookId": "029ac16b-9d99-47d7-8f96-42be8bf8d391"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"sucesso\": true,\n  \"mensagem\": \"Manutenção registrada com sucesso\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1264,
+        208
+      ],
+      "id": "8321d0d5-f9af-45c2-8382-e3b16be66385",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c58a2000-e0fa-4420-9fb9-d10313417020",
+                    "leftValue": "={{ $json.existe }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ID INCORRETO"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('tratamento').item.json.evento }}",
+                    "rightValue": "desbloqueio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "6dce9f4c-5edb-46df-8184-2c84585986d9"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Desbloqueio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "740291e7-18bc-4a9b-9358-2ffa926cc53a",
+                    "leftValue": "={{ $('tratamento').item.json.evento }}",
+                    "rightValue": "manutencao",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Manutencao"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        704,
+        0
+      ],
+      "id": "41045229-ab53-455b-b913-70a97e46b5fa",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "manutencoes",
+          "mode": "list",
+          "cachedResultName": "manutencoes"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "equipamento_id": "={{ $('tratamento').item.json.equipamento_id }}",
+            "operador_id": "={{ $('tratamento').item.json.operador_id }}",
+            "motivo_desbloqueio": "={{ $('tratamento').item.json.motivo }}",
+            "status": "fechado",
+            "data_desbloqueio": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "equipamento_id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "equipamento_id",
+              "displayName": "equipamento_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "operador_id",
+              "displayName": "operador_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "motivo_manutencao",
+              "displayName": "motivo_manutencao",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "motivo_desbloqueio",
+              "displayName": "motivo_desbloqueio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "data_manutencao",
+              "displayName": "data_manutencao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_desbloqueio",
+              "displayName": "data_desbloqueio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1024,
+        16
+      ],
+      "id": "e68288a6-5cab-48f8-aee9-f08538b9e274",
+      "name": "Desbloqueio equipamento",
+      "credentials": {
+        "postgres": {
+          "id": "NMsoMI7AeiHUt85h",
+          "name": "Postgres - SGM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "manutencoes",
+          "mode": "list",
+          "cachedResultName": "manutencoes"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "equipamento_id": "={{ $('tratamento').item.json.equipamento_id }}",
+            "operador_id": "={{ $('tratamento').item.json.operador_id }}",
+            "motivo_manutencao": "={{ $('tratamento').item.json.motivo }}",
+            "status": "aberto",
+            "data_manutencao": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "equipamento_id",
+              "displayName": "equipamento_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "operador_id",
+              "displayName": "operador_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "motivo_manutencao",
+              "displayName": "motivo_manutencao",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "motivo_desbloqueio",
+              "displayName": "motivo_desbloqueio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_manutencao",
+              "displayName": "data_manutencao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_desbloqueio",
+              "displayName": "data_desbloqueio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1024,
+        208
+      ],
+      "id": "81437ff3-a996-4582-847b-adb59a92a88e",
+      "name": "Bloquear equipamento",
+      "credentials": {
+        "postgres": {
+          "id": "NMsoMI7AeiHUt85h",
+          "name": "Postgres - SGM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"sucesso\": false,\n  \"mensagem\": \"Operador não cadastrado\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1264,
+        -128
+      ],
+      "id": "87530367-c5ad-4e8c-8cf5-a2bf2a929c61",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"sucesso\": true,\n    \"mensagem\": \"Equipamento Desbloqueado\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1264,
+        16
+      ],
+      "id": "987f84a9-f4db-47c1-930e-a4496ded967d",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) > 0 AS existe\nFROM operadores\nWHERE operador_id = '{{ $json.operador_id }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        384,
+        16
+      ],
+      "id": "73393fba-5d8d-4fab-9383-471431cc33f6",
+      "name": "Checar se operador existe",
+      "alwaysOutputData": false,
+      "credentials": {
+        "postgres": {
+          "id": "NMsoMI7AeiHUt85h",
+          "name": "Postgres - SGM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38d3c343-eceb-4eb7-b096-6f4af8a12d63",
+              "name": "equipamento_id",
+              "value": "={{ $json.body.equipamento_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ea109bb4-eee6-4b74-8228-8597489ed7e2",
+              "name": "operador_id",
+              "value": "={{ $json.body.operador_id }}",
+              "type": "string"
+            },
+            {
+              "id": "3c449123-033e-4694-a7aa-f9cc67546c98",
+              "name": "motivo",
+              "value": "={{ $json.body.motivo }}",
+              "type": "string"
+            },
+            {
+              "id": "40b6fd63-d2e8-4bd8-aa52-86ca0f9aabaf",
+              "name": "evento",
+              "value": "={{ $json.body.tipo_evento }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        16
+      ],
+      "id": "811513cd-59b4-408c-8c8f-00ee95898690",
+      "name": "tratamento"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "casa-palha-n8n.pgluv6.easypanel.host",
+            "user-agent": "PostmanRuntime/2.5.0",
+            "content-length": "134",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "cache-control": "no-cache",
+            "content-type": "application/json",
+            "postman-token": "42b4c168-b1fe-44d0-ae00-43ae9ad6a162",
+            "x-forwarded-for": "177.36.171.112, 34.232.9.233",
+            "x-forwarded-host": "casa-palha-n8n.pgluv6.easypanel.host",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "c9045af9147f",
+            "x-real-ip": "34.232.9.233"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "equipamento_id": "BOMBA-03",
+            "operador_id": "3",
+            "motivo": "Vazamento corrigido",
+            "tipo_evento": "desbloqueio"
+          },
+          "webhookUrl": "https://casa-palha-n8n.pgluv6.easypanel.host/webhook/equipamento-status",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "tratamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Desbloqueio equipamento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bloquear equipamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Desbloqueio equipamento": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bloquear equipamento": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checar se operador existe": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tratamento": {
+      "main": [
+        [
+          {
+            "node": "Checar se operador existe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "8f1b54d0-9644-4ad5-8d2a-9e2416d3c71c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "25a9e168eabca5dc2bd47d793f065b912befcfca66cba5dfed4c6d420f73679e"
+  },
+  "nodeGroups": [],
+  "id": "BJPwfI4xSNX8Gk7O",
+  "tags": []
+}

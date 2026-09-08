@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGM | Monitor de Manutenção</title>
+        <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <section class="login-screen" id="loginScreen" hidden>
+        <form class="login-card" id="loginForm">
+            <p class="eyebrow">Acesso restrito</p>
+            <h1>SGM</h1>
+            <p class="login-copy">Entre com seu usuário operacional para acessar o monitor.</p>
+            <label>E-mail<input class="input" id="loginEmail" type="email" required autocomplete="username"></label>
+            <label>Senha<input class="input" id="loginPassword" type="password" required autocomplete="current-password"></label>
+            <button class="primary" type="submit">Entrar no monitor</button>
+        </form>
+    </section>
+    <div class="app" id="appShell" hidden>
+        <aside class="sidebar">
+            <div class="brand"><div class="brand-mark">SG</div><div><strong>SGM</strong><small>Service guard monitor</small></div></div>
+            <div class="nav-label">Monitoramento</div>
+            <button class="nav-button active" data-view="equipmentView"><span class="nav-icon">▦</span>Equipamentos</button>
+            <button class="nav-button" data-view="operatorsView"><span class="nav-icon">◎</span>Operadores</button>
+            <div class="side-status"><span><i class="dot"></i> Supabase conectado</span><small class="subtext" id="sessionUser"></small><button class="table-action" id="logoutButton" type="button">Sair</button></div>
+        </aside>
+        <main>
+            <section class="view active" id="equipmentView">
+                <header class="topbar"><div><p class="eyebrow">Centro de operações / ao vivo</p><h1>Status de equipamentos</h1></div><div class="top-meta"><span id="lastUpdate">Atualizado agora</span><button class="refresh" id="refreshButton">↻ Atualizar</button></div></header>
+                <div class="metric-grid"><div class="metric"><div class="metric-label">Equipamentos monitorados</div><div class="metric-value" id="totalMetric">0</div></div><div class="metric warning"><div class="metric-label">Em manutenção</div><div class="metric-value orange" id="maintenanceMetric">0</div></div><div class="metric ok"><div class="metric-label">Operacionais</div><div class="metric-value green" id="operationalMetric">0</div></div><div class="metric"><div class="metric-label">Ciclos registrados</div><div class="metric-value" id="cyclesMetric">0</div></div></div>
+                <div class="toolbar"><strong class="toolbar-title">Visão geral <span class="subtext" id="resultCount"></span></strong><div class="controls"><input class="input" id="equipmentSearch" type="search" placeholder="Buscar equipamento..." aria-label="Buscar equipamento"><select class="select" id="statusFilter" aria-label="Filtrar por status"><option value="all">Todos os status</option><option value="maintenance">Em manutenção</option><option value="operational">Operacionais</option></select></div></div>
+                <div class="equipment-list" id="equipmentList"></div>
+            </section>
+            <section class="view" id="operatorsView">
+                <header class="topbar"><div><p class="eyebrow">Cadastro e acesso</p><h1>Operadores</h1></div><div class="top-meta"><span>Dados sincronizados do Supabase</span></div></header>
+                <div class="operator-layout"><div class="panel"><div class="panel-head"><h2>Novo operador</h2></div><form class="form" id="operatorForm"><label>Nome<input class="input" id="operatorName" required placeholder="Ex.: Marina Souza"></label><label>ID do operador<input class="input" id="operatorId" required placeholder="Ex.: OP-005"></label><button class="primary" type="submit">+ Adicionar operador</button></form></div><div class="panel"><div class="panel-head"><input class="input" id="operatorSearch" type="search" placeholder="Buscar por nome..."></div><table class="operator-table"><thead><tr><th>Operador</th><th>Nome</th><th>Cadastrado em</th><th></th></tr></thead><tbody id="operatorTableBody"></tbody></table></div></div>
+            </section>
+            <section class="view" id="detailView"><button class="back" id="backButton">← Voltar para equipamentos</button><div id="detailContent"></div></section>
+        </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
